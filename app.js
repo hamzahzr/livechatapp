@@ -1,92 +1,101 @@
-const PACKAGES=[
-{id:"basic",name:"Basic",price:5000,duration:5,desc:"Teks sederhana",icon:"▱"},
-{id:"neon",name:"Neon",price:10000,duration:7,desc:"Gold glow",icon:"◇"},
-{id:"premium",name:"Premium",price:25000,duration:10,desc:"Animated frame",icon:"✦"},
-{id:"super",name:"Super",price:50000,duration:15,desc:"Special animation",icon:"⚡"},
-{id:"vip",name:"VIP",price:100000,duration:20,desc:"Fullscreen takeover",icon:"♛"}
-];
-const KEY="maxychat_messages_v1",STOP="maxychat_stop_v1",PKG="maxychat_pkg_v1";
-const money=n=>"Rp"+Number(n||0).toLocaleString("id-ID");
-const getAll=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
-const saveAll=v=>{localStorage.setItem(KEY,JSON.stringify(v));localStorage.setItem("maxychat_ping",Date.now())};
-const selectedPackage=()=>PACKAGES.find(x=>x.id===(localStorage.getItem(PKG)||"premium"))||PACKAGES[2];
-const esc=s=>String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const K={m:"maxychat4_messages",p:"maxychat4_packages",c:"maxychat4_config",b:"maxychat4_blacklist",d:"maxychat4_display",a:"maxychat4_activity",o:"maxychat4_current"};
+const P0=[
+{id:"basic",name:"Basic",price:5000,duration:5,desc:"Fade clean",icon:"message-square"},
+{id:"neon",name:"Neon",price:10000,duration:7,desc:"Gold glow",icon:"sparkles"},
+{id:"premium",name:"Premium",price:25000,duration:10,desc:"Frame sweep",icon:"gem"},
+{id:"super",name:"Super",price:50000,duration:15,desc:"Impact burst",icon:"zap"},
+{id:"vip",name:"VIP",price:100000,duration:20,desc:"Fullscreen takeover",icon:"crown"}];
+const C0={eventName:"MAXY LIVE EVENT",hashtag:"#MAXYCHAT",whatsapp:"628000000000"},B0=["ancaman","pornografi","spam"],D0={mode:"normal",currentId:null,forceId:null};
+const PATH={
+check:'<path d="m5 12 4 4L19 6"/>',x:'<path d="m6 6 12 12M18 6 6 18"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+monitor:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',plus:'<path d="M12 5v14M5 12h14"/>',
+search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',play:'<path d="m8 5 11 7-11 7V5Z"/>',
+pause:'<path d="M8 5v14M16 5v14"/>',zap:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/>',
+crown:'<path d="m3 7 4 4 5-7 5 7 4-4-2 11H5L3 7Z"/>',gem:'<path d="m3 8 4-5h10l4 5-9 13L3 8Z"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>',
+arrow:'<path d="M5 12h14M14 7l5 5-5 5"/>',back:'<path d="M19 12H5M10 7l-5 5 5 5"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+wallet:'<path d="M4 6h14a2 2 0 0 1 2 2v10H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12M16 12h4"/>',
+up:'<path d="M12 19V5M7 10l5-5 5 5"/>',down:'<path d="M12 5v14M7 14l5 5 5-5"/>'
+};
+function svg(n){var q=PATH[n]||PATH.info;return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+q+'</svg>'}
+function iconName(n){if(n==="arrow-right")return"arrow";if(n==="arrow-left")return"back";if(n==="check-circle"||n==="shield-check")return"check";if(n==="octagon-alert"||n==="shield-alert")return"shield";if(n==="arrow-up"||n==="chevrons-up")return"up";if(n==="arrow-down")return"down";if(n==="message-square")return"info";return n}
+function icons(){document.querySelectorAll("[data-icon]").forEach(function(e){e.innerHTML=svg(iconName(e.dataset.icon))})}
+function R(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?JSON.parse(JSON.stringify(d)):v}catch(e){return JSON.parse(JSON.stringify(d))}}
+function W(k,v){localStorage.setItem(k,JSON.stringify(v));localStorage.setItem("maxychat_ping",Date.now())}
+function M(){return R(K.m,[])} function SM(v){W(K.m,v)} function PK(){return R(K.p,P0)} function SP(v){W(K.p,v)}
+function CFG(){return R(K.c,C0)} function SC(v){W(K.c,v)} function BL(){return R(K.b,B0)} function SB(v){W(K.b,v)}
+function DS(){return R(K.d,D0)} function SD(v){W(K.d,v)} function ACT(){return R(K.a,[])}
+function addAct(t,s,id){var a=ACT();a.unshift({type:t,text:s,orderId:id||"",at:new Date().toISOString()});W(K.a,a.slice(0,80))}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(x){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[x]})}
+function cash(n){return"Rp"+Number(n||0).toLocaleString("id-ID")} function date(s){return new Date(s).toLocaleString("id-ID",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}
+function pkg(id){return PK().find(function(x){return x.id===id})||PK()[0]} function msg(id){return M().find(function(x){return x.id===id})}
+function oid(){return"MXC-"+new Date().toISOString().slice(2,10).replaceAll("-","")+"-"+Math.floor(1000+Math.random()*9000)}
+function flagged(t){var x=String(t).toLowerCase();return BL().filter(function(w){return w&&x.includes(w.toLowerCase())})}
+function label(s){return({pending_moderation:"Menunggu moderasi",approved:"Disetujui",displaying:"Sedang tayang",completed:"Selesai",rejected:"Ditolak"})[s]||s}
+function toast(s){var e=document.getElementById("toast");if(!e)return;e.textContent=s;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove("show")},1800)}
+function empty(s){return'<div class="empty"><strong>'+esc(s)+'</strong></div>'}
+function sync(){var c=CFG();["eventNameTop","adminEventName","displayEventName"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=c.eventName});var h=document.getElementById("displayHashtag");if(h)h.textContent=c.hashtag}
+if(!localStorage.getItem(K.p))SP(P0);if(!localStorage.getItem(K.c))SC(C0);if(!localStorage.getItem(K.b))SB(B0);if(!localStorage.getItem(K.d))SD(D0);icons();sync();
 
-function initUser(){
-  const list=document.getElementById("packages"),sender=document.getElementById("sender"),message=document.getElementById("message"),status=document.getElementById("status");
-  const renderPackages=()=>{
-    const current=selectedPackage();
-    list.innerHTML=PACKAGES.map(p=>'<button class="package '+(p.id===current.id?"selected":"")+'" data-id="'+p.id+'"><span class="pkg-icon">'+p.icon+'</span><span><strong>'+p.name+'</strong><small>'+p.desc+' • '+p.duration+' detik</small></span><span class="price">'+money(p.price)+'</span></button>').join("");
-    list.querySelectorAll(".package").forEach(b=>b.onclick=()=>{localStorage.setItem(PKG,b.dataset.id);renderPackages();updatePay()});
-  };
-  const updatePay=()=>{const p=selectedPackage();document.getElementById("payPackage").textContent=p.name;document.getElementById("payPrice").textContent=money(p.price)};
-  const preview=()=>{document.getElementById("previewName").textContent=sender.value.trim()||"Nama kamu";document.getElementById("previewMessage").textContent=message.value.trim()||"Pesan akan muncul di sini."};
-  sender.oninput=preview;message.oninput=preview;renderPackages();updatePay();
-
-  document.getElementById("pay").onclick=()=>{
-    if(!sender.value.trim()||!message.value.trim())return alert("Isi nama dan pesan terlebih dahulu.");
-    if(!document.getElementById("terms").checked)return alert("Setujui ketentuan penayangan terlebih dahulu.");
-    const p=selectedPackage(),id="MXC-"+Date.now().toString().slice(-10),data=getAll();
-    data.unshift({id,sender:sender.value.trim(),message:message.value.trim(),packageName:p.name,price:p.price,duration:p.duration,payment:"paid",status:"pending_moderation",createdAt:new Date().toISOString()});
-    saveAll(data);localStorage.setItem("maxychat_current",id);
-    status.innerHTML="<b>Pembayaran demo berhasil.</b><br>Order ID: "+id+"<br>Status: Sedang diperiksa moderator.";
-  };
-
-  const checkStatus=()=>{
-    const id=localStorage.getItem("maxychat_current");if(!id)return;
-    const x=getAll().find(m=>m.id===id);if(!x)return;
-    const labels={pending_moderation:"Sedang diperiksa moderator",approved:"Disetujui — masuk antrean tayang",displaying:"Sedang tampil di videotron",completed:"Selesai ditayangkan",rejected:"Ditolak moderator — hubungi admin untuk pengajuan refund manual"};
-    status.innerHTML="<b>"+esc(labels[x.status]||x.status)+"</b><br>Order ID: "+esc(x.id)+"<br>"+esc(x.sender)+" — "+esc(x.message);
-  };
-  setInterval(checkStatus,1000);window.addEventListener("storage",checkStatus);
+function user(){
+ var $=function(i){return document.getElementById(i)},step=1,sel=localStorage.getItem("maxychat_selected")||"premium",sender=$("sender"),text=$("message");
+ function cp(){return pkg(sel)}
+ function rp(){$("packages").innerHTML=PK().map(function(p){return'<button class="package '+(p.id===sel?"selected":"")+'" data-p="'+p.id+'"><span class="pkg-icon">'+svg(iconName(p.icon))+'</span><span><strong>'+esc(p.name)+'</strong><small>'+esc(p.desc)+' • '+p.duration+' detik</small></span><span class="price">'+cash(p.price)+'<small>/ pesan</small></span></button>'}).join("");$("packages").querySelectorAll("[data-p]").forEach(function(b){b.onclick=function(){sel=b.dataset.p;localStorage.setItem("maxychat_selected",sel);rp();prev();payInfo()}})}
+ function prev(){var p=cp();$("previewName").textContent=sender.value.trim()||"Nama kamu";$("previewMessage").textContent=text.value.trim()||"Pesan akan muncul di sini.";$("previewPackage").textContent=p.name.toUpperCase()+" • "+p.duration+" DETIK";$("miniName").textContent=sender.value.trim()||"Raka";$("miniMessage").textContent=text.value.trim()||"Semoga acaranya makin seru malam ini! 🔥";$("charCount").textContent=text.value.length;$("previewCard").className="preview-message-card tier-"+p.name.toLowerCase()}
+ function payInfo(){var p=cp();$("payPackage").textContent=p.name;$("payDuration").textContent=p.duration+" detik";$("payPrice").textContent=cash(p.price)}
+ function review(){var p=cp();$("reviewSummary").innerHTML='<div class="review-item"><span>Paket</span><b>'+p.name+' • '+p.duration+' detik</b></div><div class="review-item"><span>Harga</span><b>'+cash(p.price)+'</b></div><div class="review-item"><span>Nama</span><b>'+esc(sender.value)+'</b></div><div class="review-item review-message"><span>Pesan</span><b>'+esc(text.value)+'</b></div>'}
+ function go(n){if(n===3&&(!sender.value.trim()||!text.value.trim()))return toast("Isi nama dan pesan terlebih dahulu");if(n===4&&!$("terms").checked)return toast("Setujui ketentuan terlebih dahulu");step=n;document.querySelectorAll(".flow-step").forEach(function(e){e.classList.toggle("active",Number(e.dataset.step)===n)});document.querySelectorAll(".step-dot").forEach(function(e){var x=Number(e.dataset.goto);e.classList.toggle("active",x===n);e.classList.toggle("done",x<n)});$("stepTitle").textContent=({1:"Pilih paket animasi",2:"Tulis pesanmu",3:"Review & ketentuan",4:"Pembayaran",5:"Status pesan"})[n];if(n===3)review();if(n===4)payInfo();if(n===5)status()}
+ function create(){var p=cp(),hits=flagged(text.value),o={id:oid(),sender:sender.value.trim(),message:text.value.trim(),packageId:p.id,packageName:p.name,price:p.price,duration:p.duration,payment:"paid",status:"pending_moderation",flagged:hits.length>0,flagHits:hits,rejectReason:"",refundStatus:"none",createdAt:new Date().toISOString()};var d=M();d.unshift(o);SM(d);localStorage.setItem(K.o,o.id);addAct("payment",o.sender+" membayar "+cash(o.price),o.id);go(5)}
+ function status(){var o=msg(localStorage.getItem(K.o));if(!o)return;var key=o.refundStatus==="refunded"?"refunded":o.refundStatus==="requested"?"refund_requested":o.status,mp={pending_moderation:["clock","Menunggu moderasi","Pesan sedang diperiksa admin",""],approved:["check","Pesan disetujui","Pesan masuk antrean videotron","success"],displaying:["play","Sedang tayang","Pesan sedang tampil di videotron","success"],completed:["check","Selesai ditayangkan","Pesan selesai ditampilkan","success"],rejected:["x","Pesan ditolak",o.rejectReason||"Tidak memenuhi ketentuan","danger"],refund_requested:["clock","Refund sedang ditinjau","Admin memproses permintaan secara manual",""],refunded:["check","Refund selesai","Pengembalian dana selesai","success"]},a=mp[key]||mp.pending_moderation;$("statusOrb").className="status-orb "+a[3];$("statusOrb").innerHTML=svg(a[0]);$("statusTitle").textContent=a[1];$("statusDescription").textContent=a[2];$("statusOrderId").textContent=o.id;var ix=o.status==="approved"?2:o.status==="displaying"?3:o.status==="completed"?4:1,ls=["Pembayaran berhasil","Verifikasi moderator","Masuk antrean","Tampil di videotron","Selesai"];$("statusTimeline").innerHTML=ls.map(function(s,i){var c=i<ix?"done":i===ix?"active":"";if(o.status==="rejected"&&i===1)c="rejected";return'<div class="status-row '+c+'"><span class="node"></span><b>'+s+'</b><small>'+(i<ix?"✓":i===ix?"AKTIF":"")+'</small></div>'}).join("");$("requestRefund").classList.toggle("hidden",!(o.status==="rejected"&&o.refundStatus==="none"))}
+ function hist(){var d=M();$("historyList").innerHTML=d.length?d.map(function(o){return'<article class="history-item"><div class="history-item-head"><strong>'+o.id+'</strong><span class="status-badge '+o.status+'">'+label(o.status)+'</span></div><p><b>'+esc(o.sender)+'</b> — '+esc(o.message)+'</p><small>'+o.packageName+' • '+cash(o.price)+' • '+date(o.createdAt)+'</small></article>'}).join(""):empty("Belum ada riwayat")}
+ function oh(){hist();$("historyDrawer").classList.add("open");$("drawerBackdrop").classList.add("open")} function ch(){$("historyDrawer").classList.remove("open");$("drawerBackdrop").classList.remove("open")}
+ rp();prev();payInfo();sender.oninput=prev;text.oninput=prev;document.querySelectorAll("[data-next]").forEach(function(b){b.onclick=function(){go(Number(b.dataset.next))}});document.querySelectorAll("[data-back]").forEach(function(b){b.onclick=function(){go(Number(b.dataset.back))}});$("simulatePay").onclick=create;$("newMessage").onclick=function(){sender.value="";text.value="";$("terms").checked=false;go(1);prev()};$("requestRefund").onclick=function(){var id=localStorage.getItem(K.o),d=M(),i=d.findIndex(function(x){return x.id===id});if(i>=0){d[i].refundStatus="requested";SM(d);addAct("refund","Refund diajukan",id);status()}};$("copyOrder").onclick=function(){var s=$("statusOrderId").textContent;if(navigator.clipboard)navigator.clipboard.writeText(s);toast("Order ID disalin")};$("openHistory").onclick=oh;$("mobileHistory").onclick=oh;$("closeHistory").onclick=ch;$("drawerBackdrop").onclick=ch;window.addEventListener("storage",function(){status();hist();sync()});setInterval(function(){if(step===5)status()},1200)
 }
 
-function initAdmin(){
-  const changeStatus=(id,status)=>{const d=getAll(),i=d.findIndex(x=>x.id===id);if(i>=0){d[i].status=status;saveAll(d);render()}};
-  const render=()=>{
-    const data=getAll(),pending=data.filter(x=>x.status==="pending_moderation"),queue=data.filter(x=>["approved","displaying"].includes(x.status));
-    document.getElementById("revenue").textContent=money(data.reduce((a,b)=>a+(b.payment==="paid"?b.price:0),0));
-    document.getElementById("total").textContent=data.length;
-    document.getElementById("pending").textContent=pending.length;
-    document.getElementById("queued").textContent=queue.length;
-
-    const m=document.getElementById("moderation");
-    m.innerHTML=pending.length?pending.map(x=>'<div class="row"><div><strong>'+esc(x.sender)+'</strong><p>'+esc(x.message)+'</p><small>'+esc(x.packageName)+' • '+money(x.price)+' • '+esc(x.id)+'</small></div><div class="actions"><button class="approve" data-a="'+x.id+'">Approve</button><button class="reject" data-r="'+x.id+'">Reject</button></div></div>').join(""):'<div class="empty">Tidak ada pesan menunggu moderasi.</div>';
-    m.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>changeStatus(b.dataset.a,"approved"));
-    m.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>changeStatus(b.dataset.r,"rejected"));
-
-    const q=document.getElementById("queue");
-    q.innerHTML=queue.length?queue.map((x,i)=>'<div class="queue-row"><b>'+(i+1)+'</b><div><strong>'+esc(x.sender)+'</strong><br><small>'+esc(x.message)+'</small></div><span class="price">'+esc(x.packageName)+'</span></div>').join(""):'<div class="empty">Antrean kosong.</div>';
-    document.getElementById("displayState").textContent=localStorage.getItem(STOP)==="1"?"Emergency stop aktif":"Normal";
-  };
-
-  document.getElementById("emergency").onclick=()=>{localStorage.setItem(STOP,"1");render()};
-  document.getElementById("resume").onclick=()=>{localStorage.setItem(STOP,"0");render()};
-  document.getElementById("clear").onclick=()=>{const d=getAll();d.forEach(x=>{if(x.status==="displaying")x.status="completed"});saveAll(d);render()};
-  render();setInterval(render,1000);window.addEventListener("storage",render);
+function admin(){
+ var $=function(i){return document.getElementById(i)},tab="dashboard";
+ function open(t){tab=t;document.querySelectorAll(".admin-tab").forEach(function(x){x.classList.toggle("active",x.dataset.panel===t)});document.querySelectorAll("#sidebarNav [data-tab]").forEach(function(x){x.classList.toggle("active",x.dataset.tab===t)});$("adminSidebar").classList.remove("open");render()}
+ document.querySelectorAll("#sidebarNav [data-tab]").forEach(function(x){x.onclick=function(){open(x.dataset.tab)}});document.querySelectorAll("[data-open-tab]").forEach(function(x){x.onclick=function(){open(x.dataset.openTab)}});$("toggleSidebar").onclick=function(){$("adminSidebar").classList.toggle("open")};
+ function metrics(){var d=M(),paid=d.filter(function(x){return x.payment==="paid"}),pen=d.filter(function(x){return x.status==="pending_moderation"}),q=d.filter(function(x){return x.status==="approved"||x.status==="displaying"}),r=d.filter(function(x){return x.refundStatus==="requested"});$("metricRevenue").textContent=cash(paid.reduce(function(a,b){return a+b.price},0));$("metricPaidCount").textContent=paid.length+" pembayaran";$("metricMessages").textContent=d.length;$("metricPending").textContent=pen.length;$("metricQueue").textContent=q.length;$("navPending").textContent=pen.length;$("navRefunds").textContent=r.length}
+ function card(o,mini){var flag=o.flagged?'<span class="flag-pill">FLAGGED'+(o.flagHits.length?": "+esc(o.flagHits.join(", ")):"")+'</span>':"";if(mini)return'<div class="mini-mod-row"><div><strong>'+esc(o.sender)+'</strong>'+flag+'<p>'+esc(o.message)+'</p><small>'+o.packageName+' • '+cash(o.price)+'</small></div><div class="mini-actions"><button class="square-action approve" data-ok="'+o.id+'">'+svg("check")+'</button><button class="square-action reject" data-no="'+o.id+'">'+svg("x")+'</button></div></div>';return'<article class="moderation-card '+(o.flagged?"flagged":"")+'"><div><div class="mod-top"><strong>'+esc(o.sender)+'</strong>'+flag+'</div><p class="mod-message">'+esc(o.message)+'</p><div class="mod-meta"><span class="meta-chip">'+o.packageName+'</span><span class="meta-chip">'+cash(o.price)+'</span><span class="meta-chip">'+o.id+'</span></div></div><div class="moderation-actions"><button class="secondary-btn small" data-no="'+o.id+'">Tolak</button><button class="primary-btn small" data-ok="'+o.id+'">Approve</button></div></article>'}
+ function bind(root){root.querySelectorAll("[data-ok]").forEach(function(b){b.onclick=function(){approve(b.dataset.ok)}});root.querySelectorAll("[data-no]").forEach(function(b){b.onclick=function(){reject(b.dataset.no)}})}
+ function approve(id){var d=M(),i=d.findIndex(function(x){return x.id===id});if(i<0)return;d[i].status="approved";d[i].approvedAt=new Date().toISOString();SM(d);addAct("approve",d[i].sender+" disetujui",id);render()}
+ function modal(html){$("modalCard").innerHTML=html;$("modalBackdrop").classList.add("open")} function close(){$("modalBackdrop").classList.remove("open")}
+ function reject(id){var o=msg(id);if(!o)return;modal('<span class="eyebrow">TOLAK PESAN</span><h3>Alasan penolakan</h3><p>'+esc(o.message)+'</p><div class="reason-list"><label><input type="radio" name="r" value="Konten tidak pantas" checked> Konten tidak pantas</label><label><input type="radio" name="r" value="Spam atau promosi"> Spam atau promosi</label><label><input type="radio" name="r" value="Tidak sesuai event"> Tidak sesuai event</label></div><div class="modal-actions"><button class="secondary-btn small" id="cancelR">Batal</button><button class="danger-btn small" id="doR">Tolak</button></div>');$("cancelR").onclick=close;$("doR").onclick=function(){var d=M(),i=d.findIndex(function(x){return x.id===id}),r=document.querySelector('input[name="r"]:checked').value;d[i].status="rejected";d[i].rejectReason=r;SM(d);addAct("reject",d[i].sender+" ditolak",id);close();render()}}
+ $("modalBackdrop").onclick=function(e){if(e.target===$("modalBackdrop"))close()};
+ function dash(){var p=M().filter(function(x){return x.status==="pending_moderation"}).slice(0,4),q=M().filter(function(x){return x.status==="approved"||x.status==="displaying"}).slice(0,5);$("dashboardModeration").innerHTML=p.length?p.map(function(o){return card(o,true)}).join(""):empty("Tidak ada pesan moderasi");$("dashboardQueue").innerHTML=q.length?q.map(function(o,i){return'<div class="mini-queue-row"><span class="queue-number">'+(i+1)+'</span><div><strong>'+esc(o.sender)+'</strong><p>'+esc(o.message)+'</p><small>'+o.packageName+'</small></div><span class="status-badge '+o.status+'">'+label(o.status)+'</span></div>'}).join(""):empty("Antrean kosong");bind($("dashboardModeration"));var a=ACT().slice(0,8);$("activityList").innerHTML=a.length?a.map(function(x){return'<div class="activity-row"><span class="activity-icon">'+svg("info")+'</span><div><b>'+esc(x.text)+'</b><p>'+esc(x.orderId)+'</p></div><time>'+date(x.at)+'</time></div>'}).join(""):empty("Belum ada aktivitas")}
+ function moder(){var q=$("moderationSearch").value.toLowerCase(),f=$("moderationFilter").value,d=M().filter(function(x){return x.status==="pending_moderation"}).filter(function(o){return(!q||(o.sender+" "+o.message+" "+o.id).toLowerCase().includes(q))&&(f==="all"||(f==="flagged"&&o.flagged)||(f==="clean"&&!o.flagged))});$("moderationList").innerHTML=d.length?d.map(function(o){return card(o,false)}).join(""):empty("Tidak ada pesan");bind($("moderationList"))}
+ $("moderationSearch").oninput=moder;$("moderationFilter").onchange=moder;
+ function queue(){var d=M(),now=d.find(function(x){return x.status==="displaying"}),a=d.filter(function(x){return x.status==="approved"});$("nowPlaying").innerHTML=now?'<span class="live-tag">● NOW PLAYING</span><strong>'+esc(now.sender)+'</strong><p>'+esc(now.message)+'</p><small>'+now.packageName+' • '+now.duration+' detik</small>':'<span class="live-tag">IDLE</span><strong>Belum ada pesan tampil</strong><p>Display menunggu antrean approved.</p>';$("queueManager").innerHTML=a.length?a.map(function(o,i){return'<div class="queue-manage-row"><span class="queue-number">'+(i+1)+'</span><div><strong>'+esc(o.sender)+'</strong><br><small>'+esc(o.message)+'</small></div><div class="queue-controls"><button data-u="'+o.id+'">'+svg("up")+'</button><button data-d="'+o.id+'">'+svg("down")+'</button><button data-now="'+o.id+'">'+svg("play")+'</button></div></div>'}).join(""):empty("Tidak ada pesan approved");$("queueManager").querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){move(b.dataset.u,-1)}});$("queueManager").querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){move(b.dataset.d,1)}});$("queueManager").querySelectorAll("[data-now]").forEach(function(b){b.onclick=function(){var s=DS();s.forceId=b.dataset.now;SD(s);toast("Diprioritaskan untuk tayang")}})}
+ function move(id,dir){var d=M(),ix=d.map(function(x,i){return{x:x,i:i}}).filter(function(z){return z.x.status==="approved"}),p=ix.findIndex(function(z){return z.x.id===id}),t=p+dir;if(p<0||t<0||t>=ix.length)return;var a=ix[p].i,b=ix[t].i,tmp=d[a];d[a]=d[b];d[b]=tmp;SM(d);queue()}
+ function tx(){var d=M();$("transactionRows").innerHTML=d.length?d.map(function(o){return'<tr><td><b>'+o.id+'</b></td><td>'+esc(o.sender)+'</td><td>'+o.packageName+'</td><td>'+cash(o.price)+'</td><td><span class="status-badge '+o.status+'">'+label(o.status)+'</span></td><td>'+date(o.createdAt)+'</td></tr>'}).join(""):'<tr><td colspan="6">Belum ada transaksi</td></tr>'}
+ function refunds(){var d=M().filter(function(x){return x.refundStatus!=="none"});$("refundList").innerHTML=d.length?d.map(function(o){var b=o.refundStatus==="requested"?'<button class="secondary-btn small" data-rx="'+o.id+'">Tolak</button><button class="primary-btn small" data-ra="'+o.id+'">Setujui</button>':o.refundStatus==="approved"?'<button class="primary-btn small" data-rd="'+o.id+'">Tandai refunded</button>':'<span class="status-badge completed">Refund selesai</span>';return'<article class="refund-card"><div><strong>'+o.id+' • '+esc(o.sender)+'</strong><p>'+esc(o.message)+'</p><div class="mod-meta"><span class="meta-chip">'+cash(o.price)+'</span><span class="meta-chip">'+esc(o.rejectReason||"")+'</span></div></div><div class="refund-actions">'+b+'</div></article>'}).join(""):empty("Belum ada refund");$("refundList").querySelectorAll("[data-ra]").forEach(function(b){b.onclick=function(){ref(b.dataset.ra,"approved")}});$("refundList").querySelectorAll("[data-rx]").forEach(function(b){b.onclick=function(){ref(b.dataset.rx,"rejected")}});$("refundList").querySelectorAll("[data-rd]").forEach(function(b){b.onclick=function(){ref(b.dataset.rd,"refunded")}})}
+ function ref(id,s){var d=M(),i=d.findIndex(function(x){return x.id===id});d[i].refundStatus=s;SM(d);addAct("refund","Refund "+s,id);render()}
+ function settings(){var c=CFG();$("settingEventName").value=c.eventName;$("settingHashtag").value=c.hashtag;$("settingWhatsapp").value=c.whatsapp;$("packageSettings").innerHTML=PK().map(function(p){return'<div class="package-setting-row"><strong>'+p.name+'</strong><input data-pr="'+p.id+'" type="number" value="'+p.price+'"><input data-du="'+p.id+'" type="number" value="'+p.duration+'"></div>'}).join("")}
+ $("saveEventSettings").onclick=function(){SC({eventName:$("settingEventName").value||C0.eventName,hashtag:$("settingHashtag").value||C0.hashtag,whatsapp:$("settingWhatsapp").value});sync();toast("Event disimpan")};$("savePackageSettings").onclick=function(){var p=PK();p.forEach(function(x){x.price=Number(document.querySelector('[data-pr="'+x.id+'"]').value)||0;x.duration=Math.max(1,Number(document.querySelector('[data-du="'+x.id+'"]').value)||1)});SP(p);toast("Paket disimpan")};
+ function black(){var d=BL();$("blacklistChips").innerHTML=d.length?d.map(function(w,i){return'<span class="black-chip">'+esc(w)+' <button data-del="'+i+'">'+svg("x")+'</button></span>'}).join(""):empty("Blacklist kosong");$("blacklistChips").querySelectorAll("[data-del]").forEach(function(b){b.onclick=function(){var x=BL();x.splice(Number(b.dataset.del),1);SB(x);black()}})}
+ $("addBlacklist").onclick=function(){var v=$("blacklistInput").value.trim();if(v&&!BL().includes(v)){var d=BL();d.push(v);SB(d)}$("blacklistInput").value="";black()};
+ function reports(){var d=M(),rej=d.filter(function(x){return x.status==="rejected"}),comp=d.filter(function(x){return x.status==="completed"}),rf=d.filter(function(x){return x.refundStatus==="refunded"}),rev=d.reduce(function(a,b){return a+(b.payment==="paid"?b.price:0)},0),cards=[["Gross revenue",cash(rev)],["Approval rate",d.length?Math.round((d.length-rej.length)/d.length*100)+"%":"0%"],["Selesai tayang",comp.length],["Refund selesai",rf.length]];$("reportCards").innerHTML=cards.map(function(x){return'<article class="report-card"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></article>'}).join("");var c=PK().map(function(p){return{p:p,n:d.filter(function(x){return x.packageId===p.id}).length}}),mx=Math.max.apply(null,[1].concat(c.map(function(x){return x.n})));$("packageBars").innerHTML=c.map(function(x){return'<div class="bar-row"><b>'+x.p.name+'</b><div class="bar-track"><div class="bar-fill" style="width:'+(x.n/mx*100)+'%"></div></div><span>'+x.n+' order</span></div>'}).join("")}
+ function health(){var s=DS();$("displayHealth").className="display-health "+(s.mode==="emergency"?"stop":s.mode==="paused"?"pause":"");$("displayHealth").innerHTML="<span></span> "+(s.mode==="emergency"?"Emergency stop aktif":s.mode==="paused"?"Display dijeda":"Display normal")}
+ function render(){metrics();health();if(tab==="dashboard")dash();if(tab==="moderation")moder();if(tab==="queue")queue();if(tab==="transactions")tx();if(tab==="refunds")refunds();if(tab==="settings")settings();if(tab==="blacklist")black();if(tab==="reports")reports()}
+ $("pauseDisplay").onclick=function(){var s=DS();s.mode="paused";SD(s);render()};$("resumeDisplay").onclick=function(){var s=DS();s.mode="normal";SD(s);render()};$("emergencyStop").onclick=function(){var s=DS();s.mode="emergency";SD(s);render()};$("clearCurrent").onclick=function(){var d=M();d.forEach(function(x){if(x.status==="displaying")x.status="completed"});SM(d);var s=DS();s.currentId=null;s.forceId=null;SD(s);render()};$("refreshDashboard").onclick=render;$("seedDemo").onclick=function(){var a=getPkg("premium"),b=getPkg("neon"),c=getPkg("basic"),d=[{id:"DEMO-"+Date.now(),sender:"Raka",message:"Semoga acaranya makin seru malam ini! 🔥",packageId:a.id,packageName:a.name,price:a.price,duration:a.duration,payment:"paid",status:"pending_moderation",flagged:false,flagHits:[],rejectReason:"",refundStatus:"none",createdAt:new Date().toISOString()},{id:"DEMO-"+(Date.now()+1),sender:"Dinda",message:"Happy birthday buat semuanya 🎉",packageId:b.id,packageName:b.name,price:b.price,duration:b.duration,payment:"paid",status:"approved",flagged:false,flagHits:[],rejectReason:"",refundStatus:"none",createdAt:new Date().toISOString()},{id:"DEMO-"+(Date.now()+2),sender:"Anon",message:"Ini contoh spam untuk moderator",packageId:c.id,packageName:c.name,price:c.price,duration:c.duration,payment:"paid",status:"pending_moderation",flagged:true,flagHits:["spam"],rejectReason:"",refundStatus:"none",createdAt:new Date().toISOString()}];SM(d.concat(M()));render()};
+ render();window.addEventListener("storage",function(){sync();render()});setInterval(function(){if(tab==="dashboard"||tab==="queue")render()},1600)
 }
 
-function initDisplay(){
-  let activeId=null,until=0;
-  const tick=()=>{
-    document.getElementById("clock").textContent=new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
-    const stopped=localStorage.getItem(STOP)==="1";
-    document.getElementById("stopLayer").classList.toggle("active",stopped);
-    if(stopped)return;
-
-    let d=getAll(),x=d.find(m=>m.status==="displaying");
-    if(x&&activeId!==x.id){activeId=x.id;until=Date.now()+x.duration*1000}
-    if(x&&Date.now()>until){x.status="completed";saveAll(d);x=null;activeId=null}
-    if(!x){x=d.find(m=>m.status==="approved");if(x){x.status="displaying";saveAll(d);activeId=x.id;until=Date.now()+x.duration*1000}}
-
-    document.getElementById("displayName").textContent=x?x.sender:"MAXY CHAT";
-    document.getElementById("displayText").textContent=x?x.message:"Pesan yang disetujui moderator akan tampil di sini.";
-    document.getElementById("displayMeta").textContent=x?(x.packageName+" • "+x.duration+" detik • "+x.id):"Menunggu antrean...";
-  };
-  tick();setInterval(tick,500);window.addEventListener("storage",tick);
+function display(){
+ var $=function(i){return document.getElementById(i)},stage=$("displayStage"),frame=$("messageFrame"),cur=null,end=0,out=false,tc=["tier-basic","tier-neon","tier-premium","tier-super","tier-vip","tier-idle"];
+ function reset(){tc.forEach(function(c){frame.classList.remove(c);stage.classList.remove(c)});frame.classList.remove("anim-in","anim-out")}
+ function idle(){reset();frame.classList.add("tier-idle");$("messageKicker").textContent="LIVE MESSAGE";$("displayName").textContent="MAXY CHAT";$("displayText").textContent="Pesan yang sudah disetujui moderator akan tampil di sini.";$("displayMeta").textContent="MENUNGGU ANTREAN PESAN"}
+ function enter(o){reset();var c="tier-"+o.packageName.toLowerCase();stage.classList.add(c);frame.classList.add(c,"anim-in");$("messageKicker").textContent=o.packageName.toUpperCase()+" MESSAGE";$("displayName").textContent=o.sender;$("displayText").textContent=o.message;$("displayMeta").textContent=o.packageName.toUpperCase()+" • "+o.duration+" DETIK • "+o.id}
+ function done(){var d=M(),i=d.findIndex(function(x){return x.id===cur});if(i>=0){d[i].status="completed";d[i].completedAt=new Date().toISOString();SM(d);addAct("display",d[i].sender+" selesai ditayangkan",d[i].id)}cur=null;out=false;var s=DS();s.currentId=null;s.forceId=null;SD(s);idle()}
+ function tick(){$("clock").textContent=new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});var s=DS();$("stopLayer").classList.toggle("active",s.mode==="emergency");$("pausedLayer").classList.toggle("active",s.mode==="paused");if(s.mode!=="normal")return;var d=M(),o=d.find(function(x){return x.status==="displaying"});if(!o){o=(s.forceId&&d.find(function(x){return x.id===s.forceId&&x.status==="approved"}))||d.find(function(x){return x.status==="approved"});if(o){var i=d.findIndex(function(x){return x.id===o.id});d[i].status="displaying";d[i].displayedAt=new Date().toISOString();SM(d);o=d[i]}}if(o&&cur!==o.id){cur=o.id;end=Date.now()+Math.max(3,Number(o.duration)||5)*1000;out=false;var st=DS();st.currentId=o.id;st.forceId=null;SD(st);enter(o);addAct("display",o.sender+" mulai ditayangkan",o.id)}if(o){var lead=o.packageName==="VIP"?1000:o.packageName==="Super"?850:o.packageName==="Premium"?720:o.packageName==="Neon"?620:480;if(!out&&Date.now()>=end-lead){out=true;frame.classList.remove("anim-in");frame.classList.add("anim-out")}if(Date.now()>=end)done()}else if(!cur)idle()}
+ idle();tick();setInterval(tick,120);window.addEventListener("storage",function(){sync();tick()})
 }
 
-const page=document.body.dataset.page;
-if(page==="user")initUser();
-if(page==="admin")initAdmin();
-if(page==="display")initDisplay();
+var page=document.body.dataset.page;
+if(page==="user")user();
+if(page==="admin")admin();
+if(page==="display")display();
