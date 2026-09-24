@@ -1,25 +1,58 @@
-# MAXY CHAT
+# MAXY CHAT v2 — Full Interactive Prototype
 
-Prototype web app pesan berbayar untuk videotron dengan moderasi admin.
+Versi ini mengaktifkan seluruh fitur prototype MAXY CHAT dalam satu aplikasi frontend Black + Gold.
 
-## Halaman
-- `index.html` — alur pengguna: pilih paket, isi nama + pesan, preview, aturan, pembayaran demo, status.
-- `admin.html` — dashboard moderator/admin: approve, reject, live queue, emergency stop.
-- `display.html` — layar videotron fullscreen untuk pesan yang sudah approved.
-- `styles.css` — tema MAXY CHAT hitam + gold.
-- `app.js` — logika prototype menggunakan localStorage.
+## Fitur aktif
 
-## Alur
-1. User memilih paket.
-2. User mengisi **nama pengirim** dan **pesan**.
-3. User menyetujui ketentuan.
-4. Pembayaran disimulasikan berhasil (prototype).
-5. Pesan masuk status `pending_moderation`.
-6. Admin approve/reject.
-7. Pesan approved masuk queue.
-8. Display videotron hanya mengambil pesan approved.
+### User App
+- Stepper 5 tahap: Paket → Pesan → Review → Pembayaran → Status
+- 5 tier animasi: Basic, Neon, Premium, Super, VIP
+- Preview animasi sesuai tier
+- Nama pengirim tetap tampil, tanpa foto profil
+- Persetujuan aturan wajib
+- Simulasi pembayaran
+- Status order realtime
+- Riwayat order
+- Pengajuan refund setelah pesan ditolak
+- Responsive mobile app
 
-## Catatan
-Ini masih prototype frontend. Belum ada payment gateway asli, database realtime, autentikasi admin, webhook, maupun refund backend.
+### Admin Control Center
+- Dashboard & metrics
+- Moderasi approve/reject dengan alasan
+- Automatic FLAGGED berdasarkan blacklist
+- Antrean videotron + reorder + prioritas tampil
+- Transaksi
+- Refund management
+- Event settings
+- Edit harga & durasi paket
+- Blacklist editor
+- Reports
+- Pause / Resume / Clear / Emergency Stop
+- Data demo generator
 
-Tema visual: **Black + Gold**.
+### Videotron Display
+- Fullscreen display
+- Nama pengirim + pesan
+- Animasi enter/active/exit berbeda tiap tier
+- Queue otomatis
+- Pause overlay dan Emergency overlay
+- Event name & hashtag dari admin settings
+
+## Cara menjalankan
+
+Jalankan folder dengan web server lokal:
+
+```bash
+python -m http.server 8080
+```
+
+Buka:
+- User: http://localhost:8080/index.html
+- Admin: http://localhost:8080/admin.html
+- Display: http://localhost:8080/display.html
+
+## Catatan produksi
+
+Versi ini adalah prototype frontend dan menyimpan state di localStorage, sehingga alur lengkap dapat diuji pada browser/origin yang sama.
+
+Untuk produksi multi-device masih perlu backend realtime, autentikasi admin, payment gateway + webhook, database server, audit log, rate limiting, dan penyimpanan refund/transaksi server.
