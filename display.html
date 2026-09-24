@@ -1,8 +1,28 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MAXY CHAT Display</title><link rel="stylesheet" href="styles.css"></head>
-<body data-page="display" class="display-body"><main class="stage">
-<div class="stage-head"><div class="brand">MAXY <b>CHAT</b></div><div class="live">● LIVE</div></div>
-<div class="message-frame"><div id="displayName" class="display-name">MAXY CHAT</div><div id="displayText" class="display-text">Pesan yang disetujui moderator akan tampil di sini.</div><div id="displayMeta" class="display-meta">Menunggu antrean...</div></div>
-<div class="stage-foot"><span>#MAXYCHAT</span><span>PESANMU. TAMPIL LEBIH BERKESAN.</span><span id="clock">--:--</span></div>
-<div id="stopLayer" class="stop-layer"><b>MAXY CHAT</b><span>Display dihentikan oleh moderator.</span></div>
-</main><script src="app.js"></script></body></html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000000">
+  <title>MAXY CHAT — Videotron Display</title><link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="display" class="display-body">
+  <main class="stage" id="displayStage">
+    <div class="stage-grid"></div><div class="stage-glow"></div>
+    <header class="stage-head">
+      <div class="brand-lockup display-brand"><span class="brand-mark">M</span><span><b>MAXY</b><em>CHAT</em></span></div>
+      <div class="stage-event"><strong id="displayEventName">MAXY LIVE EVENT</strong><span id="displayHashtag">#MAXYCHAT</span></div>
+      <div class="live-pill"><span></span> LIVE</div>
+    </header>
+    <section class="message-frame tier-idle" id="messageFrame">
+      <div class="message-kicker" id="messageKicker">LIVE MESSAGE</div>
+      <div class="display-name" id="displayName">MAXY CHAT</div>
+      <div class="display-text" id="displayText">Pesan yang sudah disetujui moderator akan tampil di sini.</div>
+      <div class="display-meta" id="displayMeta">MENUNGGU ANTREAN PESAN</div>
+      <div class="frame-deco frame-deco-a"></div><div class="frame-deco frame-deco-b"></div>
+    </section>
+    <footer class="stage-foot"><span id="displayStatusText"><i data-icon="shield-check"></i> MODERATED MESSAGE</span><span>PESANMU. TAMPIL LEBIH BERKESAN.</span><span id="clock">--:--</span></footer>
+    <div class="paused-layer" id="pausedLayer"><div class="pause-logo">M</div><strong>MAXY CHAT</strong><span>Display sementara dijeda oleh operator.</span></div>
+    <div class="stop-layer" id="stopLayer"><div class="stop-mark"><i data-icon="octagon-alert"></i></div><strong>MAXY CHAT</strong><span>Emergency stop aktif.</span></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
