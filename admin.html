@@ -1,11 +1,99 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MAXY CHAT Admin</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090806">
+  <title>MAXY CHAT — Admin Control Center</title><link rel="stylesheet" href="styles.css">
+</head>
 <body data-page="admin">
-<header class="topbar"><a class="brand" href="index.html">MAXY <b>CHAT</b></a><nav><a href="index.html">User</a><a href="admin.html">Admin</a><a href="display.html">Display</a></nav></header>
-<main class="admin-layout">
-<aside><h3>CONTROL CENTER</h3><a class="active">Dashboard</a><a>Moderasi Pesan</a><a>Antrean Tayang</a><a>Transaksi</a><a>Refund Request</a><a>Event & Pengaturan</a><a>Blacklist</a><a>Laporan</a><button id="emergency" class="danger">Emergency Stop</button></aside>
-<section class="admin-main"><div class="admin-head"><div><span class="kicker">MAXY CHAT ADMIN</span><h1>Moderator Dashboard</h1></div><span class="online">● Display Online</span></div>
-<div class="stats"><article><span>Pendapatan Demo</span><b id="revenue">Rp0</b></article><article><span>Total Pesan</span><b id="total">0</b></article><article><span>Menunggu Moderasi</span><b id="pending">0</b></article><article><span>Antrean Tayang</span><b id="queued">0</b></article></div>
-<div class="admin-grid"><section class="admin-card"><span class="kicker">MODERATION</span><h2>Pesan menunggu verifikasi</h2><div id="moderation"></div></section><section class="admin-card"><span class="kicker">LIVE QUEUE</span><h2>Antrean tayang</h2><div id="queue"></div></section></div>
-<section class="admin-card"><span class="kicker">EVENT SAFETY</span><h2>Kontrol layar</h2><div class="controls"><button id="clear" class="outline">Clear Current</button><button id="resume" class="gold small">Resume Display</button><span id="displayState">Normal</span></div></section>
-</section></main><script src="app.js"></script></body></html>
+  <div class="app-bg"></div>
+  <header class="app-topbar admin-topbar">
+    <button class="icon-btn mobile-only" id="toggleSidebar"><span data-icon="menu"></span></button>
+    <a class="brand-lockup" href="index.html"><span class="brand-mark">M</span><span><b>MAXY</b><em>CHAT</em></span></a>
+    <div class="admin-event-label"><span class="dot-live"></span><span id="adminEventName">MAXY LIVE EVENT</span></div>
+    <div class="top-actions"><a class="icon-btn" href="display.html" title="Buka display"><span data-icon="monitor"></span></a><button class="icon-btn" id="seedDemo" title="Isi data demo"><span data-icon="sparkles"></span></button></div>
+  </header>
+
+  <div class="admin-app">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-profile"><div class="avatar-admin">MC</div><div><strong>MAXY Control</strong><span>Owner / Moderator</span></div></div>
+      <nav class="sidebar-nav" id="sidebarNav">
+        <button class="active" data-tab="dashboard"><i data-icon="layout-dashboard"></i><span>Dashboard</span></button>
+        <button data-tab="moderation"><i data-icon="shield-check"></i><span>Moderasi</span><b class="nav-badge" id="navPending">0</b></button>
+        <button data-tab="queue"><i data-icon="list-ordered"></i><span>Antrean Tayang</span></button>
+        <button data-tab="transactions"><i data-icon="receipt"></i><span>Transaksi</span></button>
+        <button data-tab="refunds"><i data-icon="rotate-ccw"></i><span>Refund</span><b class="nav-badge amber" id="navRefunds">0</b></button>
+        <button data-tab="settings"><i data-icon="settings"></i><span>Event & Paket</span></button>
+        <button data-tab="blacklist"><i data-icon="ban"></i><span>Blacklist</span></button>
+        <button data-tab="reports"><i data-icon="chart-column"></i><span>Laporan</span></button>
+      </nav>
+      <div class="sidebar-safety">
+        <span>DISPLAY CONTROL</span>
+        <div class="safety-grid"><button id="pauseDisplay" title="Pause"><i data-icon="pause"></i></button><button id="resumeDisplay" title="Resume"><i data-icon="play"></i></button><button id="clearCurrent" title="Clear current"><i data-icon="eraser"></i></button></div>
+        <button class="emergency-btn" id="emergencyStop"><i data-icon="octagon-alert"></i> EMERGENCY STOP</button>
+        <div class="display-health" id="displayHealth"><span></span> Display normal</div>
+      </div>
+    </aside>
+
+    <main class="admin-main-v2">
+      <section class="admin-tab active" data-panel="dashboard">
+        <div class="page-head"><div><span class="eyebrow">OVERVIEW</span><h1>Dashboard</h1><p>Pantau moderasi, transaksi, antrean, dan kondisi layar.</p></div><div class="page-head-actions"><button class="secondary-btn small" id="refreshDashboard"><i data-icon="refresh-cw"></i> Refresh</button><a class="primary-btn small" href="display.html"><i data-icon="monitor"></i> Open display</a></div></div>
+        <div class="metrics-grid">
+          <article><span class="metric-icon gold"><i data-icon="wallet"></i></span><div><small>Pendapatan</small><strong id="metricRevenue">Rp0</strong><em id="metricPaidCount">0 pembayaran</em></div></article>
+          <article><span class="metric-icon blue"><i data-icon="message-square"></i></span><div><small>Total pesan</small><strong id="metricMessages">0</strong><em>Semua order</em></div></article>
+          <article><span class="metric-icon amber"><i data-icon="shield-check"></i></span><div><small>Menunggu moderasi</small><strong id="metricPending">0</strong><em>Perlu tindakan</em></div></article>
+          <article><span class="metric-icon green"><i data-icon="radio"></i></span><div><small>Antrean tayang</small><strong id="metricQueue">0</strong><em>Approved + live</em></div></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel-card"><div class="panel-head"><div><span class="eyebrow">PRIORITAS</span><h3>Perlu moderasi</h3></div><button class="text-btn" data-open-tab="moderation">Lihat semua <i data-icon="arrow-right"></i></button></div><div id="dashboardModeration"></div></section>
+          <section class="panel-card"><div class="panel-head"><div><span class="eyebrow">LIVE QUEUE</span><h3>Antrean berikutnya</h3></div><button class="text-btn" data-open-tab="queue">Kelola <i data-icon="arrow-right"></i></button></div><div id="dashboardQueue"></div></section>
+        </div>
+        <section class="panel-card"><div class="panel-head"><div><span class="eyebrow">RECENT ACTIVITY</span><h3>Aktivitas terbaru</h3></div></div><div id="activityList" class="activity-list"></div></section>
+      </section>
+
+      <section class="admin-tab" data-panel="moderation">
+        <div class="page-head"><div><span class="eyebrow">MODERATION</span><h1>Moderasi Pesan</h1><p>Hanya pesan yang disetujui yang bisa masuk antrean videotron.</p></div></div>
+        <div class="toolbar"><div class="search-box"><i data-icon="search"></i><input id="moderationSearch" placeholder="Cari nama, pesan, atau Order ID..."></div><select id="moderationFilter"><option value="all">Semua</option><option value="flagged">Flagged otomatis</option><option value="clean">Tidak ter-flag</option></select></div>
+        <div id="moderationList" class="moderation-grid"></div>
+      </section>
+
+      <section class="admin-tab" data-panel="queue">
+        <div class="page-head"><div><span class="eyebrow">LIVE QUEUE</span><h1>Antrean Tayang</h1><p>Atur urutan pesan approved sebelum masuk ke videotron.</p></div></div>
+        <div class="queue-board"><div class="now-playing-card" id="nowPlaying"></div><div class="panel-card"><div class="panel-head"><div><span class="eyebrow">UP NEXT</span><h3>Antrean</h3></div></div><div id="queueManager"></div></div></div>
+      </section>
+
+      <section class="admin-tab" data-panel="transactions">
+        <div class="page-head"><div><span class="eyebrow">FINANCE</span><h1>Transaksi</h1><p>Daftar seluruh pembayaran demo MAXY CHAT.</p></div></div>
+        <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Order</th><th>Pengirim</th><th>Paket</th><th>Nominal</th><th>Status pesan</th><th>Waktu</th></tr></thead><tbody id="transactionRows"></tbody></table></div></div>
+      </section>
+
+      <section class="admin-tab" data-panel="refunds">
+        <div class="page-head"><div><span class="eyebrow">REFUND MANAGEMENT</span><h1>Permintaan Refund</h1><p>Pengembalian dana diproses manual setelah admin meninjau permintaan.</p></div></div>
+        <div id="refundList" class="refund-grid"></div>
+      </section>
+
+      <section class="admin-tab" data-panel="settings">
+        <div class="page-head"><div><span class="eyebrow">CONFIGURATION</span><h1>Event & Paket</h1><p>Ubah identitas event, kontak admin, harga, dan durasi paket.</p></div></div>
+        <div class="settings-grid">
+          <section class="panel-card"><div class="panel-head"><div><span class="eyebrow">EVENT</span><h3>Informasi event</h3></div></div><div class="field"><label>Nama event</label><div class="input-wrap"><i data-icon="calendar-days"></i><input id="settingEventName"></div></div><div class="field"><label>Hashtag</label><div class="input-wrap"><i data-icon="hash"></i><input id="settingHashtag"></div></div><div class="field"><label>WhatsApp admin</label><div class="input-wrap"><i data-icon="phone"></i><input id="settingWhatsapp" placeholder="628..."></div></div><button class="primary-btn" id="saveEventSettings"><i data-icon="save"></i> Simpan event</button></section>
+          <section class="panel-card"><div class="panel-head"><div><span class="eyebrow">PACKAGES</span><h3>Harga & durasi</h3></div></div><div id="packageSettings" class="package-settings"></div><button class="primary-btn" id="savePackageSettings"><i data-icon="save"></i> Simpan paket</button></section>
+        </div>
+      </section>
+
+      <section class="admin-tab" data-panel="blacklist">
+        <div class="page-head"><div><span class="eyebrow">AUTOMATIC FLAG</span><h1>Blacklist Kata</h1><p>Kata di daftar ini hanya memberi tanda FLAGGED. Keputusan akhir tetap pada moderator.</p></div></div>
+        <div class="settings-grid"><section class="panel-card"><div class="field"><label>Tambah kata / frasa</label><div class="input-action"><div class="input-wrap"><i data-icon="ban"></i><input id="blacklistInput" placeholder="Contoh: kata terlarang"></div><button class="primary-btn small" id="addBlacklist">Tambah</button></div></div><div id="blacklistChips" class="blacklist-chips"></div></section><section class="panel-card info-panel"><i data-icon="info"></i><h3>Cara kerja</h3><p>Saat pesan masuk, sistem mencocokkan isi pesan dengan blacklist. Jika ada kecocokan, order diberi label <b>FLAGGED</b> agar moderator lebih waspada. Pesan tidak pernah otomatis ditayangkan.</p></section></div>
+      </section>
+
+      <section class="admin-tab" data-panel="reports">
+        <div class="page-head"><div><span class="eyebrow">ANALYTICS</span><h1>Laporan</h1><p>Ringkasan performa order dan paket.</p></div></div>
+        <div id="reportCards" class="report-grid"></div>
+        <section class="panel-card"><div class="panel-head"><div><span class="eyebrow">PACKAGE MIX</span><h3>Distribusi paket</h3></div></div><div id="packageBars" class="package-bars"></div></section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop"><div class="modal-card" id="modalCard"></div></div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
