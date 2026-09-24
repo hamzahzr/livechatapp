@@ -1,0 +1,10 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/gwpe7134/public_html/livechat.jetbeta.my.id/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -f index.html $DEPLOYPATH
+    - /bin/cp -f admin.html $DEPLOYPATH
+    - /bin/cp -f display.html $DEPLOYPATH
+    - /bin/cp -f styles.css $DEPLOYPATH
+    - /bin/cp -f app.js $DEPLOYPATH
